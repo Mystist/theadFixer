@@ -11,6 +11,7 @@ Response to $(window).resize event. (option, default will be true);
 Tested in IE8+, Chrome, FireFox.  
 
 Better to know :  
+To use this, your table should in a div container which made your table be able to scroll.  
 The behind way to hold the thead is to upwrap the original table and then wrap two new table tag to each of the thead and tbody, So your table must contain the thead tag and tbody tag.  
 To style the table, use `Style` and `class`, please add no more attrs to the original table tag.  
 You can set width to each of the th/td within the thead, either percentage or pixel will both ok.  
