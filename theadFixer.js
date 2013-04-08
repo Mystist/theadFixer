@@ -1,4 +1,11 @@
-﻿(function ($) {
+﻿/*
+ * theadFixer
+ * 
+ * https://github.com/Mystist/theadFixer
+ *
+ */
+ 
+(function ($) {
 
 	var methods = {
 
