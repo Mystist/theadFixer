@@ -3,6 +3,10 @@
  * 
  * https://github.com/Mystist/theadFixer
  *
+ * Copyright (c) 2013 Foundation and other contributors
+ *
+ * License: https://github.com/Mystist/theadFixer/blob/master/MIT-LICENSE.txt
+ *
  */
  
 (function ($) {
