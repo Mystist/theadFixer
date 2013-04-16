@@ -54,10 +54,10 @@
     built: function() {
       this.setTdWidth();
       this.builtHtml();
-      this.setWidth();
       if(this.floatMode) {
         this.appendTrAndSetPosition();
       }
+      this.setWidth();
       this.syncScrollBar();
     },
 
@@ -103,14 +103,48 @@
       tThis.$this.find("thead").parent().wrap('<div class="m_wrap" style="overflow:hidden;"></div>');
 
       var height = tThis.$this.children().height() - tThis.$this.find("table:first").outerHeight(true);
-      tThis.$this.find("tbody").parent().wrap('<div class="m_wrapper" style="height:' + height + 'px; overflow-y:auto; overflow-x:' + tThis.overflow_x + '">');
+      tThis.$this.find("tbody").parent().wrap('<div class="m_wrapper" style="height:' + height + 'px; width: 100%; overflow-y:auto; overflow-x:' + tThis.overflow_x + '">');
 
+    },
+    
+    appendTrAndSetPosition: function() {
+    
+      var tThis = this;
+      
+      tThis.$this.find(".m_wrapper").height(tThis.$this.children().height());
+      
+      tThis.$this.find(".m_wrap").css({
+        "position": "absolute",
+        "z-index": 1
+      });
+      
+      tThis.$this.find(".m_wrapper").css({
+        "position": "absolute",
+        "z-index": 0
+      });
+      
+      var $tr = $('<tr></tr>');
+      
+      tThis.$this.find("tbody tr:first td").each(function() {
+        $tr.append('<td width="'+$(this).attr("width")+'" >&nbsp;</td>');
+      });
+      
+      tThis.$this.find("tbody").prepend($tr);
+      
+      var fixNumber = tThis.$this.find("thead tr:first").outerHeight(true) - tThis.$this.find("tbody tr:first").outerHeight(true) + 1;
+      
+      tThis.$this.find(".m_wrapper").height(tThis.$this.children().height() - fixNumber);
+      
+      tThis.$this.find(".m_wrapper").css({
+        "top": fixNumber
+      });
+    
     },
 
     setWidth: function() {
 
       var tThis = this;
-
+      
       var fixNumber = 0;
       if (tThis.$this.find(".m_wrapper").height() < tThis.$this.find("table:last").outerHeight(true)) {
         fixNumber = 17;
@@ -125,34 +159,19 @@
 
     },
     
-    appendTrAndSetPosition: function() {
-    
-      var tThis = this;
-      
-      var $tr = $('<tr></tr>');
-      
-      tThis.$this.find("tbody tr:first td").each(function() {
-        $tr.append('<td width="'+$(this).attr("width")+'" >&nbsp;</td>');
-      });
-      
-      tThis.$this.find("tbody").prepend($tr);
-      
-      tThis.$this.find("table:last").css({
-        "position": "relative",
-        "top": -1 * tThis.$this.find("tbody tr:first").outerHeight(true)
-      });
-    
-    },
-    
     removeTrAndRevertPosition: function() {
     
       var tThis = this;
       
-      var $target = tThis.$this.find("table:last");
+      tThis.$this.find("table:last").find("tbody tr:first").remove();
       
-      $target.css("position", "");
+      tThis.$this.find(".m_wrap").css({
+        "position": ""
+      });
       
-      $target.find("tbody tr:first").remove();
+      tThis.$this.find(".m_wrapper").css({
+        "position": ""
+      });
       
     },
     

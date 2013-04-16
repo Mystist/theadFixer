@@ -32,8 +32,9 @@ Add option `{"floatMode":false}`.
 In many situations, we won't use the mode, so the defalut will be false.  
 But some times, we may change the first `tr` data dynamic by operating the `Dom`, so the `width` attr will be breaking, then we can use `{"floatMode":true}`.  
 What exactly the mode has done is that:  
-1. Add a new empty `tr` to the second table, set the `width` to each `td` of it.    
-2. Set the table by `position:relative` and `top: -20px`, the 20px is automatic calculated.
+1. Set `CSS` of the two tables by `position:absolute`.  
+2. Add a new empty `tr` to the second table, set the `width` to each `td` of it.
+
 
 ## 2013-04-08  
 Initial theadFixer release.
