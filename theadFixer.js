@@ -33,9 +33,12 @@
     this.resizeTimer = null;
     this.overflow_x = null;
     this.floatMode = null;
+    this.winWidth = $(window).width();
+    this.winHeight = $(window).height();
     this.t1 = null;
     this.t2 = null;
     this.t3 = null;
+    this.t4 = null;
   }
 
   TheadFixer.prototype = {
@@ -54,18 +57,21 @@
     built: function() {
       this.setTdWidth();
       this.builtHtml();
-      if(this.floatMode) {
-        this.appendTrAndSetPosition();
-      }
       this.setWidth();
+      if(this.floatMode) {
+        this.appendTheadAndSetPosition();
+      }
       this.syncScrollBar();
     },
 
     setTdWidth: function() {
 
       var tThis = this;
+      
+      var tableWidth = 0;
 
       tThis.$this.find("thead tr").children().each(function(i) {
+
         var tWidth = "";
         if ($(this).attr("width")) {
           tWidth = $(this).attr("width");
@@ -75,10 +81,14 @@
           $(this).attr("thewidth", "none").attr("width", tWidth);
         }
         tThis.$this.find("tbody tr:first td").eq(i).attr("width", tWidth);
+        tableWidth += tWidth;
       });
 
       this.t3 = tThis.$this.find("table").css("table-layout");
-      tThis.$this.find("table").css("table-layout", "fixed");
+      tThis.$this.find("table").css({
+        "table-layout": "fixed",
+        "width": tableWidth
+      });
 
     },
 
@@ -88,6 +98,7 @@
 
       this.t1 = tThis.$this.find("table").attr("style");
       this.t2 = tThis.$this.find("table").attr("class");
+      this.t4 = tThis.$this.find("table").css("border-top");
 
       tThis.$this.find("table").wrap('<div class="m_innerwrapper"></div>');
 
@@ -107,9 +118,32 @@
 
     },
     
-    appendTrAndSetPosition: function() {
+    setWidth: function() {
+
+      var tThis = this;
+      
+      var fixNumber = 0;
+      if (tThis.$this.find(".m_wrapper").height() < tThis.$this.find("table:last").outerHeight(true)) {
+        fixNumber = 17;
+      }
+      tThis.$this.find("table:first").css("width", tThis.$this.find("table:first").width() - fixNumber + "px");
+      tThis.$this.find("table:last").css("width", tThis.$this.find("table:last").width() + "px");
+
+      var fixNumber2 = 0;
+      if (tThis.$this.find(".m_wrapper").width() < tThis.$this.find("table:last").outerWidth(true) && fixNumber!=0) {
+        fixNumber2 = 17;
+      }
+      tThis.$this.find(".m_wrap").css("width", tThis.$this.find(".m_wrapper").width() - fixNumber2 + "px");
+
+    },
+    
+    appendTheadAndSetPosition: function() {
     
       var tThis = this;
+      
+      tThis.$this.find(".m_innerwrapper")
+        .width(tThis.$this.find(".m_innerwrapper").width())
+        .height(tThis.$this.find(".m_innerwrapper").height());
       
       tThis.$this.find(".m_wrapper").height(tThis.$this.children().height());
       
@@ -123,47 +157,19 @@
         "z-index": 0
       });
       
-      var $tr = $('<tr></tr>');
+      tThis.$this.find("table:last").css("border-top", tThis.t4);
       
-      tThis.$this.find("tbody tr:first td").each(function() {
-        $tr.append('<td width="'+$(this).attr("width")+'" >&nbsp;</td>');
-      });
+      var el = tThis.$this.find("table:first thead")[0].outerHTML;
       
-      tThis.$this.find("tbody").prepend($tr);
-      
-      var fixNumber = tThis.$this.find("thead tr:first").outerHeight(true) - tThis.$this.find("tbody tr:first").outerHeight(true) + 1;
-      
-      tThis.$this.find(".m_wrapper").height(tThis.$this.children().height() - fixNumber);
-      
-      tThis.$this.find(".m_wrapper").css({
-        "top": fixNumber
-      });
+      tThis.$this.find("table:last").prepend(el);
     
     },
-
-    setWidth: function() {
-
-      var tThis = this;
-      
-      var fixNumber = 0;
-      if (tThis.$this.find(".m_wrapper").height() < tThis.$this.find("table:last").outerHeight(true)) {
-        fixNumber = 17;
-      }
-      tThis.$this.find("table").css("width", tThis.$this.find(".m_wrapper").width() - fixNumber + "px");
-
-      var fixNumber2 = 0;
-      if (tThis.$this.find(".m_wrapper").width() < tThis.$this.find("table:last").outerWidth(true)) {
-        fixNumber2 = 17;
-      }
-      tThis.$this.find(".m_wrap").css("width", tThis.$this.find(".m_wrapper").width() - fixNumber2 + "px");
-
-    },
     
-    removeTrAndRevertPosition: function() {
+    removeTheadAndRevertPosition: function() {
     
       var tThis = this;
-      
-      tThis.$this.find("table:last").find("tbody tr:first").remove();
+
+      tThis.$this.find("table:last").find("thead").remove();
       
       tThis.$this.find(".m_wrap").css({
         "position": ""
@@ -201,7 +207,10 @@
         tThis.$this.find("tbody tr:first td").eq(i).removeAttr("width");
       });
 
-      tThis.$this.find("table").css("table-layout", this.t3);
+      tThis.$this.find("table").css({
+        "table-layout": this.t3,
+        "width": ""
+      });
 
     },
 
@@ -209,8 +218,7 @@
 
       var tThis = this;
 
-      tThis.$this.find(".m_wrapper").bind("scroll",
-      function() {
+      tThis.$this.find(".m_wrapper").bind("scroll", function() {
         var first = tThis.$this.find(".m_wrap");
         var last = tThis.$this.find(".m_wrapper");
         if (first.scrollLeft() != last.scrollLeft()) {
@@ -225,12 +233,22 @@
       var tThis = this;
 
       $(window).unbind("resize").resize(function() {
-        clearTimeout(tThis.resizeTimer);
-        tThis.resizeTimer = setTimeout(function() {
-          tThis.revert();
-          tThis.built();
-        },
-        200);
+
+        var winNewWidth = $(window).width(),
+          winNewHeight = $(window).height();
+
+        if(Math.abs(tThis.winWidth-winNewWidth)>20 || Math.abs(tThis.winHeight-winNewHeight)>20) {
+          clearTimeout(tThis.resizeTimer);
+          tThis.resizeTimer = setTimeout(function() {
+            tThis.revert();
+            tThis.built();
+          },
+          200);
+        }
+
+        tThis.winWidth = winNewWidth;
+        tThis.winHeight = winNewHeight;
+
       });
 
     },
@@ -238,7 +256,7 @@
     revert: function() {
 
       if(this.floatMode) {
-        this.removeTrAndRevertPosition();
+        this.removeTheadAndRevertPosition();
       }
       this.revertHtml();
       this.revertTdWidth();
