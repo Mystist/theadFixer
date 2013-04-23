@@ -27,6 +27,9 @@ Contact me for more information:
 
 # Change Log
 
+## 2013-04-23  
+Fix revert issues: revert can only be execute when the theadFixer has used.
+
 ## 2013-04-22
 Fix floatMode issues.  
 Just as what we know in 2013-04-16, we had added a new empty `tr` to the second table. Today, we replace the `tr` with `<thead><tr></tr></thead>` which is just the copy HTML of the origin table.

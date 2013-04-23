@@ -39,6 +39,7 @@
     this.t2 = null;
     this.t3 = null;
     this.t4 = null;
+    this.hasUsed = false;
   }
 
   TheadFixer.prototype = {
@@ -62,6 +63,7 @@
         this.appendTheadAndSetPosition();
       }
       this.syncScrollBar();
+      this.hasUsed = true;
     },
 
     setTdWidth: function() {
@@ -255,11 +257,16 @@
 
     revert: function() {
 
-      if(this.floatMode) {
-        this.removeTheadAndRevertPosition();
+      if(this.hasUsed) {
+      
+        if(this.floatMode) {
+          this.removeTheadAndRevertPosition();
+        }
+        this.revertHtml();
+        this.revertTdWidth();
+        this.hasUsed = false;
+
       }
-      this.revertHtml();
-      this.revertTdWidth();
 
     }
 
