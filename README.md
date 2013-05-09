@@ -1,4 +1,4 @@
-# Your Tiny Helper, Your Awesome theadFixer!
+## Your Tiny Helper, Your Awesome theadFixer!
 
 theadFixer is a simple, tiny, kind, free jQuery plugin to hold the thead of a table when scrolling.
 
@@ -25,16 +25,16 @@ Contact me for more information:
 
 [0]: http://mystist.github.com/
 
-# Change Log
+## Change Log
 
-## 2013-04-23  
+### 2013-04-23  
 Fix revert issues: revert can only be execute when the theadFixer has used.
 
 ## 2013-04-22
 Fix floatMode issues.  
 Just as what we know in 2013-04-16, we had added a new empty `tr` to the second table. Today, we replace the `tr` with `<thead><tr></tr></thead>` which is just the copy HTML of the origin table.
 
-## 2013-04-16
+### 2013-04-16
 Add option `{"floatMode":false}`.  
 In many situations, we won't use the mode, so the defalut will be false.  
 But some times, we may change the first `tr` data dynamic by operating the `Dom`, so the `width` attr will be breaking, then we can use `{"floatMode":true}`.  
@@ -43,7 +43,7 @@ What exactly the mode has done is that:
 2. Add a new empty `tr` to the second table, set the `width` to each `td` of it.
 
 
-## 2013-04-08  
+### 2013-04-08  
 Initial theadFixer release.
 
 
