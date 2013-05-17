@@ -18,7 +18,7 @@
         "bindResize": true,
         "overflow_x": "auto",
         "floatMode": false,
-		"renderbetter": "auto"
+        "renderbetter": "auto"
       };
       var settings = $.extend(defaults, options);
       var theadFixer = new TheadFixer();
@@ -50,10 +50,17 @@
     initialize: function(st) {
       this.overflow_x = st.overflow_x;
       this.floatMode = st.floatMode;
-      this.built();
+      //根据参数不同,判断渲染优化是否启用
+      if(st.renderbetter == "auto" || st.renderbetter.toLowerCase() == "theadfixer")
+	  {
+    	  //如果渲染优化参数传递的是auto(自动启用)或者TheadFixer,那么此时启用渲染优化
+      	  $(this.$this[0]).find("table,thead,tbody").hide();
+      }
+  	  this.built();
       if (st.bindResize) {
         this.bindResize();
       }
+      $(this.$this[0]).find("table,thead,tbody").show();
     },
 
     built: function() {
