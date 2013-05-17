@@ -17,7 +17,8 @@
       var defaults = {
         "bindResize": true,
         "overflow_x": "auto",
-        "floatMode": false
+        "floatMode": false,
+		"renderbetter": "auto"
       };
       var settings = $.extend(defaults, options);
       var theadFixer = new TheadFixer();
